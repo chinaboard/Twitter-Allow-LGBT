@@ -1,0 +1,37 @@
+name: Update Block Lists
+
+on:
+  push:
+    # branches:
+    #   - 'master'
+    paths:
+      - '**.json'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Init ENV
+        run: |
+          sudo apt install jq
+
+      - name: Merge Lists
+        run: |
+          ./merge.sh
+
+      - name: Commit changes
+        run: |
+          git config user.name "chinaboard"
+          git config user.email "chinaboard@gmail.com"
+          git add .
+          git commit -m "task: update lists"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
