@@ -179,7 +179,7 @@ async function block_list_members () {
 
 async function block_special_list () {
   // 加急名单: 特别活跃/拉黑我/来挑衅的黄推
-  const special_scammers = [
+  let special_scammers = [
     "1626262000547377153",
     "1083844806",
     "1191513095774048256",
@@ -292,6 +292,16 @@ async function block_special_list () {
     "1412358780872921093",
     "1688885999265361920"
   ]
+
+  try {
+    const url =
+      "https://raw.githubusercontent.com/daymade/Twitter-Block-Porn/master/block.json";
+    const response = await fetch(url);
+    const data = await response.text();
+    special_scammers = JSON.parse(data);
+  } catch (error) {
+    console.error("Failed to get block list from url:", error);
+  }
 
   block_by_ids(special_scammers, "special_scammers_list")
 }
